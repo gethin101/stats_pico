@@ -2,24 +2,53 @@ import tkinter as tk
 
 count = 5
 
-def countdown():
+def update_count():
     global count
+    label.config(text=str(count))
+    
     if count > 0:
-        label.config(text=str(count))
         count -= 1
-        root.after(1000, countdown)
+        root.after(1000, update_count)
     else:
-        label.config(text="1")
+        root.after(1000, root.destroy)
 
 root = tk.Tk()
-root.title("Countdown")
+root.title("System Process")
 
-# Make window large
+# Fullscreen dark window
 root.attributes("-fullscreen", True)
+root.configure(bg="black")
 
-label = tk.Label(root, text="5", font=("Arial", 120))
-label.pack(expand=True)
+frame = tk.Frame(root, bg="black")
+frame.pack(expand=True)
 
-root.after(1000, countdown)
+title = tk.Label(
+    frame,
+    text="System integrity check in progress...",
+    font=("Consolas", 28),
+    fg="#00ff9c",
+    bg="black"
+)
+title.pack(pady=40)
+
+label = tk.Label(
+    frame,
+    text="5",
+    font=("Consolas", 200, "bold"),
+    fg="#ff3b3b",
+    bg="black"
+)
+label.pack()
+
+sub = tk.Label(
+    frame,
+    text="Please do not interrupt this process",
+    font=("Consolas", 18),
+    fg="white",
+    bg="black"
+)
+sub.pack(pady=40)
+
+root.after(1000, update_count)
 
 root.mainloop()
