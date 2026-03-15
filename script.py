@@ -15,7 +15,7 @@ root = tk.Tk()
 root.title("Countdown")
 
 # Make window large
-root.geometry("600x400")
+root.attributes("-fullscreen", True)
 
 label = tk.Label(root, text="5", font=("Arial", 120))
 label.pack(expand=True)
