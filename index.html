@@ -190,12 +190,16 @@
     passwordInput.focus();
   };
 
-  // SUBMIT PASSWORD
-  document.getElementById("passwordSubmit").onclick = () => {
+  // SUBMIT PASSWORD FUNCTION
+  function submitPassword() {
     const code = passwordInput.value;
 
     if (code === "Gethin*123") {
       logBox.textContent = "";
+
+      // Clear Firebase logs too
+      db.ref("logs").remove();
+
       modal.style.display = "none";
 
       setTimeout(() => {
@@ -205,7 +209,15 @@
     } else {
       window.location.href = "https://goaway.com";
     }
-  };
+  }
+
+  // BUTTON CLICK
+  document.getElementById("passwordSubmit").onclick = submitPassword;
+
+  // ENTER KEY SUPPORT
+  passwordInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") submitPassword();
+  });
 </script>
 
 </body>
