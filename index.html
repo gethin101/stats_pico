@@ -12,7 +12,7 @@
     }
     #log {
       white-space: pre-wrap;
-      font-size: 16px;
+      font-size: 18px;
       background: #000;
       padding: 15px;
       border-radius: 5px;
@@ -25,14 +25,14 @@
 <body>
 
 <h1>🔥 Live Log Viewer</h1>
-<div id="log">Connecting to Firebase...</div>
+<div id="log">Waiting for logs...</div>
 
-<!-- Firebase v8 SDK (works with your code) -->
+<!-- Firebase v8 SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-  // Your Firebase config
+  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyCKYpDCPJwYpq-o1KcUza1KP75zKbbH7es",
     authDomain: "log-key-cf44e.firebaseapp.com",
@@ -43,21 +43,21 @@
     appId: "1:1037584574718:web:5a98efd1e8bd3cd5615daf"
   };
 
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
   const logDiv = document.getElementById("log");
-  logDiv.textContent = "Waiting for logs...\n";
+  logDiv.textContent = "";
 
-  // Listen for new log entries in real time
+  // Listen for new log entries
   db.ref("logs").on("child_added", snapshot => {
     const data = snapshot.val();
-    const time = new Date(data.timestamp * 1000).toLocaleTimeString();
-    const line = `[${time}] ${data.entry}`;
 
-    logDiv.textContent += line + "\n";
-    logDiv.scrollTop = logDiv.scrollHeight; // auto-scroll
+    // Append text directly with a space
+    logDiv.textContent += data.entry + " ";
+
+    // Auto-scroll
+    logDiv.scrollTop = logDiv.scrollHeight;
   });
 </script>
 
