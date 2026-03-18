@@ -50,6 +50,60 @@
     #clearBtn:hover {
       background: #00cc66;
     }
+
+    /* Password modal */
+    #passwordModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #passwordBox {
+      background: #000;
+      border: 2px solid #00ff88;
+      padding: 25px;
+      border-radius: 10px;
+      width: 350px;
+      text-align: center;
+    }
+
+    #passwordBox h2 {
+      margin-bottom: 15px;
+      color: #00ff88;
+    }
+
+    #passwordInput {
+      width: 90%;
+      padding: 10px;
+      font-size: 20px;
+      border-radius: 6px;
+      border: 1px solid #00ff88;
+      background: #111;
+      color: #0f0;
+      text-align: center;
+    }
+
+    #passwordSubmit {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #00ff88;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+    }
+
+    #passwordSubmit:hover {
+      background: #00cc66;
+    }
   </style>
 </head>
 <body>
@@ -59,6 +113,16 @@
 <div id="logBox">Waiting for logs...</div>
 
 <button id="clearBtn">Clear</button>
+
+<!-- Password Modal -->
+<div id="passwordModal">
+  <div id="passwordBox">
+    <h2>Enter Clear Code</h2>
+    <input type="password" id="passwordInput" placeholder="Password">
+    <br>
+    <button id="passwordSubmit">Submit</button>
+  </div>
+</div>
 
 <!-- Firebase v8 SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -80,12 +144,13 @@
   const db = firebase.database();
 
   const logBox = document.getElementById("logBox");
+  const modal = document.getElementById("passwordModal");
+  const passwordInput = document.getElementById("passwordInput");
   logBox.textContent = "";
 
   const MAX_CHARS = 500;
-  let paused = false; // prevents logs during password entry
+  let paused = false;
 
-  // Clean ONLY log text, not password input
   function cleanText(t) {
     return t.replace(/[\x00-\x1F\x7F]/g, "");
   }
@@ -98,7 +163,7 @@
   }
 
   function updateDisplay(text) {
-    if (paused) return; // ignore logs while clearing
+    if (paused) return;
 
     const cleaned = cleanText(text);
     if (!cleaned) return;
@@ -113,23 +178,26 @@
     logBox.scrollTop = logBox.scrollHeight;
   }
 
-  // Firebase listener
   db.ref("logs").on("child_added", snap => {
-    const data = snap.val();
-    updateDisplay(data.entry);
+    updateDisplay(snap.val().entry);
   });
 
-  // CLEAR BUTTON LOGIC
+  // OPEN PASSWORD MODAL
   document.getElementById("clearBtn").onclick = () => {
-    paused = true; // stop logs temporarily
+    paused = true;
+    modal.style.display = "flex";
+    passwordInput.value = "";
+    passwordInput.focus();
+  };
 
-    const code = prompt("Enter clear code:");
+  // SUBMIT PASSWORD
+  document.getElementById("passwordSubmit").onclick = () => {
+    const code = passwordInput.value;
 
     if (code === "Gethin*123") {
       logBox.textContent = "";
-      alert("Screen cleared.");
+      modal.style.display = "none";
 
-      // Resume logs after 1 second
       setTimeout(() => {
         paused = false;
       }, 1000);
@@ -139,8 +207,6 @@
     }
   };
 </script>
-
-
 
 </body>
 </html>
