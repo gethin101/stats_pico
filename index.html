@@ -84,6 +84,11 @@
 
   const MAX_CHARS = 500;
 
+  // Remove ALL control characters (0x00–0x1F and 0x7F)
+  function cleanText(t) {
+    return t.replace(/[\x00-\x1F\x7F]/g, "");
+  }
+
   function sweepLeft() {
     logBox.style.transform = "translateX(-25px)";
     setTimeout(() => {
@@ -92,7 +97,10 @@
   }
 
   function updateDisplay(text) {
-    logBox.textContent += text + " ";
+    const cleaned = cleanText(text);
+    if (!cleaned) return; // ignore empty after cleaning
+
+    logBox.textContent += cleaned + " ";
 
     if (logBox.textContent.length > MAX_CHARS) {
       sweepLeft();
@@ -120,6 +128,7 @@
     }
   };
 </script>
+
 
 </body>
 </html>
