@@ -12,17 +12,14 @@
     }
     #log {
       white-space: pre-wrap;
-      font-size: 20px;
+      font-size: 22px;
       background: #000;
       padding: 15px;
       border-radius: 5px;
       border: 1px solid #0f0;
       max-height: 80vh;
       overflow-y: auto;
-      transition: opacity 0.3s ease;
-    }
-    .fade {
-      opacity: 0.2;
+      transition: transform 0.15s linear;
     }
   </style>
 </head>
@@ -53,20 +50,21 @@
   const logDiv = document.getElementById("log");
   logDiv.textContent = "";
 
-  const MAX_CHARS = 250; // how many characters to keep visible
+  const MAX_CHARS = 200; // how many characters to keep visible
+
+  function sweepLeft() {
+    logDiv.style.transform = "translateX(-10px)";
+    setTimeout(() => {
+      logDiv.style.transform = "translateX(0px)";
+    }, 150);
+  }
 
   function updateDisplay(newText) {
     logDiv.textContent += newText + " ";
 
-    // If too long, fade out then remove characters
     if (logDiv.textContent.length > MAX_CHARS) {
-      logDiv.classList.add("fade");
-
-      setTimeout(() => {
-        // Remove characters from the start
-        logDiv.textContent = logDiv.textContent.slice(-MAX_CHARS);
-        logDiv.classList.remove("fade");
-      }, 200);
+      sweepLeft();
+      logDiv.textContent = logDiv.textContent.slice(-(MAX_CHARS));
     }
 
     logDiv.scrollTop = logDiv.scrollHeight;
