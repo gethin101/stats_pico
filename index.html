@@ -25,11 +25,11 @@
 <body>
 
 <h1>🔥 Live Log Viewer</h1>
-<div id="log">Loading...</div>
+<div id="log">Connecting to Firebase...</div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+<!-- Firebase v8 SDK (works with your code) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
   // Your Firebase config
@@ -44,17 +44,20 @@
   };
 
   // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
   const logDiv = document.getElementById("log");
+  logDiv.textContent = "Waiting for logs...\n";
 
-  // Listen for new log entries
+  // Listen for new log entries in real time
   db.ref("logs").on("child_added", snapshot => {
     const data = snapshot.val();
-    const line = `[${new Date(data.timestamp * 1000).toLocaleTimeString()}] ${data.entry}`;
+    const time = new Date(data.timestamp * 1000).toLocaleTimeString();
+    const line = `[${time}] ${data.entry}`;
+
     logDiv.textContent += line + "\n";
-    logDiv.scrollTop = logDiv.scrollHeight;
+    logDiv.scrollTop = logDiv.scrollHeight; // auto-scroll
   });
 </script>
 
