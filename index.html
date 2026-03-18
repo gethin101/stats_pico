@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Live Log Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #0f0;
+      padding: 20px;
+    }
+    #log {
+      white-space: pre-wrap;
+      font-size: 16px;
+      background: #000;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #0f0;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🔥 Live Log Viewer</h1>
+<div id="log">Loading...</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+
+<script>
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCKYpDCPJwYpq-o1KcUza1KP75zKbbH7es",
+    authDomain: "log-key-cf44e.firebaseapp.com",
+    databaseURL: "https://log-key-cf44e-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "log-key-cf44e",
+    storageBucket: "log-key-cf44e.firebasestorage.app",
+    messagingSenderId: "1037584574718",
+    appId: "1:1037584574718:web:5a98efd1e8bd3cd5615daf"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const logDiv = document.getElementById("log");
+
+  // Listen for new log entries
+  db.ref("logs").on("child_added", snapshot => {
+    const data = snapshot.val();
+    const line = `[${new Date(data.timestamp * 1000).toLocaleTimeString()}] ${data.entry}`;
+    logDiv.textContent += line + "\n";
+    logDiv.scrollTop = logDiv.scrollHeight;
+  });
+</script>
+
+</body>
+</html>
