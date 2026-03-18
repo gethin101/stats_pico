@@ -83,8 +83,9 @@
   logBox.textContent = "";
 
   const MAX_CHARS = 500;
+  let paused = false; // prevents logs during password entry
 
-  // Remove ALL control characters (0x00–0x1F and 0x7F)
+  // Clean ONLY log text, not password input
   function cleanText(t) {
     return t.replace(/[\x00-\x1F\x7F]/g, "");
   }
@@ -97,8 +98,10 @@
   }
 
   function updateDisplay(text) {
+    if (paused) return; // ignore logs while clearing
+
     const cleaned = cleanText(text);
-    if (!cleaned) return; // ignore empty after cleaning
+    if (!cleaned) return;
 
     logBox.textContent += cleaned + " ";
 
@@ -118,16 +121,25 @@
 
   // CLEAR BUTTON LOGIC
   document.getElementById("clearBtn").onclick = () => {
+    paused = true; // stop logs temporarily
+
     const code = prompt("Enter clear code:");
 
     if (code === "Gethin*123") {
       logBox.textContent = "";
       alert("Screen cleared.");
+
+      // Resume logs after 1 second
+      setTimeout(() => {
+        paused = false;
+      }, 1000);
+
     } else {
       window.location.href = "https://goaway.com";
     }
   };
 </script>
+
 
 
 </body>
